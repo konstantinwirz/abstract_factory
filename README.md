@@ -13,7 +13,7 @@ Requirements:
 * c++ compiler with c++11 support (tested on Mac OS X with Apple LLVM version 4.2)
 * cmake >= 2.8
 * make tool(GNU Make, Ninja, ...)
-* boost(log, unit_test_framework)
+* boost>=1.54(log, unit_test_framework)
 
 create a build directory and change to it
 > mdkir build && cd build <br>
