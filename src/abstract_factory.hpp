@@ -30,7 +30,7 @@ namespace kw {
  *
  * @endcode
  */
-template<typename T, typename... Args>
+template<typename T, typename KeyType = std::string, typename... Args>
 class abstract_factory {
 public:
     using creator_type = std::function<T* (Args... args)>;
@@ -41,7 +41,7 @@ public:
 	virtual ~abstract_factory() = default;
 
     /// returns the list of all registered creators
-	std::list<std::string> keys() const {
+	std::list<KeyType> keys() const {
 		std::list<std::string> result;
 		for(auto p : creators) {
 			result.push_back(p.first);
@@ -52,7 +52,7 @@ public:
     /// return new product for the given key
     /// @param args these arguments will be passed to the creator function
     /// @throws std::out_of_range if no such key exists
-	std::shared_ptr<T> create(const std::string &key, const Args&... args) {
+	std::shared_ptr<T> create(const KeyType &key, const Args&... args) {
 		creator_type creator;
 		try {
 			creator = creators.at(key);
@@ -65,7 +65,7 @@ public:
 
     /// registers the product creator for the given key
     /// returns true on success
-	bool register_creator(const std::string &key, creator_type creator) {
+	bool register_creator(const KeyType &key, creator_type creator) {
 		bool registered = false;
 		if(is_creator_registered(key)) {
 			BOOST_LOG_TRIVIAL(warning) << "creator for \"" << key << "\" already registered, nothing to do";
@@ -80,7 +80,7 @@ public:
 
     /// unregisters a product creator for the given key
     /// returns true on success
-	bool unregister_creator(const std::string &key) {
+	bool unregister_creator(const KeyType &key) {
 		bool unregistered = false;
 		if(!is_creator_registered(key)) {
 			BOOST_LOG_TRIVIAL(warning) << "creator for \"" << key << "\" is not registered, nothing to do";
@@ -94,12 +94,12 @@ public:
 	}
 
     /// returns true if a creator for the given key is registered
-	bool is_creator_registered(const std::string &key) {
+	bool is_creator_registered(const KeyType &key) {
 		return creators.find(key) != creators.end();
 	}
 
 private:
-	std::map<std::string, creator_type> creators;
+	std::map<KeyType, creator_type> creators;
 };
 
 
