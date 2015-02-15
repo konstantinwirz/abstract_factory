@@ -31,19 +31,27 @@ BOOST_AUTO_TEST_CASE(init) {
     BOOST_CHECK_THROW(factory.create("some keys"), std::out_of_range);
 }
 
-BOOST_AUTO_TEST_CASE(register_creator) {
+BOOST_AUTO_TEST_CASE(register_product) {
     test_factory factory;
 
-    BOOST_CHECK(factory.register_creator("product_a", [] {return new product_a;}));
-    BOOST_CHECK(factory.register_creator("product_b", [] {return new product_b;}));
+    BOOST_CHECK(factory.register_product("product_a", [] {
+        return new product_a;
+    }));
+    BOOST_CHECK(factory.register_product("product_b", [] {
+        return new product_b;
+    }));
 
     BOOST_CHECK(factory.is_creator_registered("product_a"));
     BOOST_CHECK(factory.is_creator_registered("product_b"));
     BOOST_CHECK(!factory.is_creator_registered("invalid key"));
 
     // try to register the same porducts again
-    BOOST_CHECK(!factory.register_creator("product_a", [] {return new product_a;}));
-    BOOST_CHECK(!factory.register_creator("product_b", [] {return new product_b;}));
+    BOOST_CHECK(!factory.register_product("product_a", [] {
+        return new product_a;
+    }));
+    BOOST_CHECK(!factory.register_product("product_b", [] {
+        return new product_b;
+    }));
     BOOST_CHECK(factory.is_creator_registered("product_a"));
     BOOST_CHECK(factory.is_creator_registered("product_b"));
 }
@@ -52,8 +60,12 @@ BOOST_AUTO_TEST_CASE(unregister_creator) {
     test_factory factory;
 
     // register
-    BOOST_REQUIRE(factory.register_creator("product_a", [] {return new product_a;}));
-    BOOST_REQUIRE(factory.register_creator("product_b", [] {return new product_b;}));
+    BOOST_REQUIRE(factory.register_product("product_a", [] {
+        return new product_a;
+    }));
+    BOOST_REQUIRE(factory.register_product("product_b", [] {
+        return new product_b;
+    }));
     BOOST_REQUIRE(factory.is_creator_registered("product_a"));
     BOOST_REQUIRE(factory.is_creator_registered("product_b"));
 
@@ -68,8 +80,12 @@ BOOST_AUTO_TEST_CASE(unregister_creator) {
 BOOST_AUTO_TEST_CASE(create) {
     test_factory factory;
 
-    BOOST_REQUIRE(factory.register_creator("product_a", [] {return new product_a;}));
-    BOOST_REQUIRE(factory.register_creator("product_b", [] {return new product_b;}));
+    BOOST_REQUIRE(factory.register_product("product_a", [] {
+        return new product_a;
+    }));
+    BOOST_REQUIRE(factory.register_product("product_b", [] {
+        return new product_b;
+    }));
 
     BOOST_CHECK_EQUAL(factory.create("product_a")->get_value(), "A");
     BOOST_CHECK_EQUAL(factory.create("product_b")->get_value(), "B");
@@ -78,8 +94,12 @@ BOOST_AUTO_TEST_CASE(create) {
 BOOST_AUTO_TEST_CASE(keys) {
     test_factory factory;
 
-    factory.register_creator("product_a", [] {return new product_a;});
-    factory.register_creator("product_b", [] {return new product_b;});
+    factory.register_product("product_a", [] {
+        return new product_a;
+    });
+    factory.register_product("product_b", [] {
+        return new product_b;
+    });
 
     std::list<std::string> actual = factory.keys();
     std::list<std::string> expected = {"product_a", "product_b"};

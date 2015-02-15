@@ -65,7 +65,7 @@ public:
 
     /// registers the product creator for the given key
     /// returns true on success
-	bool register_creator(const KeyType &key, creator_type creator) {
+	bool register_product(const KeyType &key, creator_type creator) {
 		bool registered = false;
 		if(is_creator_registered(key)) {
 			BOOST_LOG_TRIVIAL(warning) << "creator for \"" << key << "\" already registered, nothing to do";
